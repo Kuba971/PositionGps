@@ -27,7 +27,7 @@ public interface IGpsPositionService {
 
     /**
      *
-     * @param positionId1 - Input Mobile Number
+     * @param positionId1
      * @param positionId2
      * @return boolean indicating if the delete of Account details is successful or not
      */

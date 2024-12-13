@@ -8,7 +8,7 @@ import com.gddj.gps.repository.GpsPositionRepository;
 import com.gddj.gps.service.IGpsPositionService;
 import com.gddj.gps.utils.DistanceHelper;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

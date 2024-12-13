@@ -8,7 +8,6 @@ import com.gddj.gps.mapper.GpsPositionMapper;
 import com.gddj.gps.service.IGpsPositionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;

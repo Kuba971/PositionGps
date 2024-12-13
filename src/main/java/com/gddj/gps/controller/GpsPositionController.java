@@ -135,10 +135,10 @@ public class GpsPositionController {
     })
     @GetMapping("/fetchDistance")
     public ResponseEntity<Boolean> isDistanceLessThan10km(@RequestParam
-                                          @Pattern(regexp = "(^$|[0-9])", message = "Mobile number must be digits")
+                                          @Pattern(regexp = "(^$|[0-9])", message = "Id number must be digits")
                                           String positionId1,
                                           @RequestParam
-                                          @Pattern(regexp = "(^$|[0-9])", message = "Mobile number must be digits")
+                                          @Pattern(regexp = "(^$|[0-9])", message = "Id number must be digits")
                                           String positionId2) {
         boolean isDistanceLessThan10km = iGpsPositionService.isDistanceLess(Long.parseLong(positionId1), Long.parseLong(positionId2));
         return ResponseEntity.status(HttpStatus.OK).body(isDistanceLessThan10km);
