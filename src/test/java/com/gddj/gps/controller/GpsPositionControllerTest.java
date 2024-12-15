@@ -5,9 +5,10 @@ import com.gddj.gps.dto.GpsPositionDto;
 import com.gddj.gps.dto.ResponseDto;
 import com.gddj.gps.entity.GpsPositionEntity;
 import com.gddj.gps.mapper.GpsPositionMapper;
-import com.gddj.gps.service.IGpsPositionService;
+import com.gddj.gps.service.impl.GpsPositionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,9 @@ import static org.mockito.Mockito.*;
 public class GpsPositionControllerTest {
 
     @Mock
-    private IGpsPositionService iGpsPositionService;
+    private GpsPositionServiceImpl gpsPositionService;
 
-    @Mock
+    @InjectMocks
     private GpsPositionController gpsPositionController;
 
     @BeforeEach
@@ -38,7 +39,7 @@ public class GpsPositionControllerTest {
                         GpsPositionMapper.mapToGpsPositionDto(new GpsPositionEntity(2222222L, "Position2", 13.082680, 80.270718))
                 );
 
-        when(iGpsPositionService.fetchGpsPositionList()).thenReturn(mockGpsPositions);
+        when(gpsPositionService.fetchGpsPositionList()).thenReturn(mockGpsPositions);
 
         ResponseEntity<List<GpsPositionDto>> response = gpsPositionController.fetchCGpsPositionList();
 
@@ -46,14 +47,14 @@ public class GpsPositionControllerTest {
         assertEquals(mockGpsPositions, response.getBody());
         assertEquals(2, Objects.requireNonNull(response.getBody()).size());
 
-        verify(iGpsPositionService, times(1)).fetchGpsPositionList();
+        verify(gpsPositionService, times(1)).fetchGpsPositionList();
     }
 
     @Test
     void createGpsPosition() {
         GpsPositionDto gpsPositionDto = GpsPositionMapper.mapToGpsPositionDto(new GpsPositionEntity(1111111L, "Position1", 12.971598, 77.594566));
 
-        doNothing().when(iGpsPositionService).createPosition(gpsPositionDto);
+        doNothing().when(gpsPositionService).createPosition(gpsPositionDto);
 
         ResponseEntity<ResponseDto> response = gpsPositionController.createGpsPosition(gpsPositionDto);
 
@@ -61,14 +62,14 @@ public class GpsPositionControllerTest {
         assertEquals(GpsPositionConstants.STATUS_201, Objects.requireNonNull(response.getBody()).getStatusCode());
         assertEquals(GpsPositionConstants.MESSAGE_201, response.getBody().getStatusMsg());
 
-        verify(iGpsPositionService, times(1)).createPosition(gpsPositionDto);
+        verify(gpsPositionService, times(1)).createPosition(gpsPositionDto);
     }
 
     @Test
     void deleteGpsPosition() {
         Long positionId = 1111111L;
         boolean isDeleted = true;
-        when(iGpsPositionService.deletePosition(positionId)).thenReturn(isDeleted);
+        when(gpsPositionService.deletePosition(positionId)).thenReturn(isDeleted);
 
         ResponseEntity<ResponseDto> response = gpsPositionController.deleteGpsPosition(positionId.toString());
 
@@ -76,22 +77,23 @@ public class GpsPositionControllerTest {
         assertEquals(GpsPositionConstants.STATUS_200, Objects.requireNonNull(response.getBody()).getStatusCode());
         assertEquals(GpsPositionConstants.MESSAGE_200, response.getBody().getStatusMsg());
 
-        verify(iGpsPositionService, times(1)).deletePosition(positionId);
+        verify(gpsPositionService, times(1)).deletePosition(positionId);
     }
 
     @Test
     void isDistanceLessThan10km() {
-    Long positionId1 = 1111111L;
-    Long positionId2 = 2222222L;
+        Long positionId1 = 1L;
+        Long positionId2 = 6L;
+        String rawDataFront = "{\"positionId1\":\"1\",\"positionId2\":\"6\"}";
 
-    when(iGpsPositionService.isDistanceLess(positionId1, positionId2)).thenReturn(true);
+        when(gpsPositionService.isDistanceLess(positionId1, positionId2)).thenReturn(false);
 
-    ResponseEntity<Boolean> response = gpsPositionController.isDistanceLessThan10km(positionId1.toString(), positionId2.toString());
+        ResponseEntity<Boolean> response = gpsPositionController.isDistanceLessThan10km(rawDataFront);
 
-    assertEquals(200, response.getStatusCode().value());
-    assertEquals(true, response.getBody());
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(false, response.getBody());
 
-    verify(iGpsPositionService, times(1)).isDistanceLess(positionId1, positionId2);
+        verify(gpsPositionService, times(1)).isDistanceLess(positionId1, positionId2);
     }
 }
 

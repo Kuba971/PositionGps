@@ -6,6 +6,7 @@ import com.gddj.gps.entity.GpsPositionEntity;
 public class GpsPositionMapper {
     public static GpsPositionDto mapToGpsPositionDto(GpsPositionEntity gpsPositionEntity) {
         GpsPositionDto gpsPositionDto = new GpsPositionDto();
+        gpsPositionDto.setPositionId(String.valueOf(gpsPositionEntity.getPositionId()));
         gpsPositionDto.setPositionName(gpsPositionEntity.getPositionName());
         gpsPositionDto.setPositionLongitude(gpsPositionEntity.getPositionLongitude());
         gpsPositionDto.setPositionLatitude(gpsPositionEntity.getPositionLatitude());

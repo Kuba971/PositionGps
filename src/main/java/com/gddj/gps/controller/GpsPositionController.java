@@ -5,6 +5,8 @@ import com.gddj.gps.dto.ErrorResponseDto;
 import com.gddj.gps.dto.GpsPositionDto;
 import com.gddj.gps.dto.ResponseDto;
 import com.gddj.gps.service.IGpsPositionService;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -100,8 +102,8 @@ public class GpsPositionController {
             )
     }
     )
-    @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteGpsPosition(@RequestParam
+    @DeleteMapping("/delete/{positionId}")
+    public ResponseEntity<ResponseDto> deleteGpsPosition(@PathVariable
                                                             @Pattern(regexp = "(^$|[0-9])", message = "id must be digits")
                                                             String positionId) {
         boolean isDeleted = iGpsPositionService.deletePosition(Long.parseLong(positionId));
@@ -133,14 +135,11 @@ public class GpsPositionController {
                     )
             )
     })
-    @GetMapping("/fetchDistance")
-    public ResponseEntity<Boolean> isDistanceLessThan10km(@RequestParam
-                                          @Pattern(regexp = "(^$|[0-9])", message = "Id number must be digits")
-                                          String positionId1,
-                                          @RequestParam
-                                          @Pattern(regexp = "(^$|[0-9])", message = "Id number must be digits")
-                                          String positionId2) {
-        boolean isDistanceLessThan10km = iGpsPositionService.isDistanceLess(Long.parseLong(positionId1), Long.parseLong(positionId2));
+    @PostMapping("/fetchDistance")
+    public ResponseEntity<Boolean> isDistanceLessThan10km(@Valid @RequestBody String twoIdsPositionToEvaluate) {
+        Gson gson = new Gson();
+        JsonElement dataFromFront = gson.fromJson(twoIdsPositionToEvaluate, JsonElement.class);
+        boolean isDistanceLessThan10km = iGpsPositionService.isDistanceLess(dataFromFront.getAsJsonObject().get("positionId1").getAsLong(), dataFromFront.getAsJsonObject().get("positionId2").getAsLong());
         return ResponseEntity.status(HttpStatus.OK).body(isDistanceLessThan10km);
     }
 }

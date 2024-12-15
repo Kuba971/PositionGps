@@ -27,8 +27,8 @@ public interface IGpsPositionService {
 
     /**
      *
-     * @param positionId1
-     * @param positionId2
+     * @param positionId1 - id of the gps position 1
+     * @param positionId2 - id of the gps position 2
      * @return boolean indicating if the delete of Account details is successful or not
      */
     boolean isDistanceLess(Long positionId1, Long positionId2);
